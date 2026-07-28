@@ -1,4 +1,7 @@
-package com.template;
+package com.template.model.dao;
+
+import com.template.model.Conexao;
+import com.template.model.dto.SerieDTO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,6 +10,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static com.template.util.DialogUtil.showError;
 
 public class SerieDAO {
 
@@ -28,6 +33,7 @@ public class SerieDAO {
 
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Erro ao cadastrar série: " + e.getMessage());
+            showError("Erro ao cadastrar a serie");
         }
 
     }
@@ -54,6 +60,7 @@ public class SerieDAO {
 
         } catch (SQLException e) {
             logger.log(Level.SEVERE,"Erro ao listar series: " + e.getMessage());
+            showError("Erro ao listar a serie");
         }
         return listaSeries;
     }
@@ -76,6 +83,7 @@ public class SerieDAO {
 
         } catch (SQLException e) {
             logger.log(Level.SEVERE,"Erro ao atualizar serie: " + e.getMessage());
+            showError("Erro ao atualizar a serie");
         }
     }
 
@@ -93,6 +101,7 @@ public class SerieDAO {
 
         } catch (SQLException e) {
             logger.log(Level.SEVERE,"Erro ao deletar serie: " + e.getMessage());
+            showError("Erro ao deletar a serie");
         }
     }
 

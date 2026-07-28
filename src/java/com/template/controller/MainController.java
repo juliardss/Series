@@ -1,18 +1,23 @@
-package com.template;
+package com.template.controller;
 
+
+import com.template.model.dao.SerieDAO;
+import com.template.model.dto.SerieDTO;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
+
 
 import java.util.ArrayList;
+import static com.template.util.DialogUtil.*;
+
 
 
 public class MainController {
+
 
     @FXML private Button btnSalvar;
     @FXML private Button btnDeletar;
@@ -29,24 +34,32 @@ public class MainController {
     @FXML private TableColumn<SerieDTO, Integer> colAnoLancamento;
     @FXML private TableColumn<SerieDTO, String> colPlataforma;
 
+
+
+
     @FXML
     private void btnSalvarAction(ActionEvent event) {
+
 
         String nome = txtNome.getText();
         String genero = txtGenero.getText();
         int anoLancamento = Integer.parseInt(txtAnoLancamento.getText());
         String plataforma = txtPlataforma.getText();
 
-        SerieDTO objseriedto = new SerieDTO();
-        objseriedto.setNome(nome);
-        objseriedto.setGenero(genero);
-        objseriedto.setAnoLancamento(anoLancamento);
-        objseriedto.setPlataforma(plataforma);
 
-        SerieDAO objseriedao = new SerieDAO();
-        objseriedao.cadastrarSerie(objseriedto);
+        SerieDTO objSerieDTO = new SerieDTO();
+        objSerieDTO.setNome(nome);
+        objSerieDTO.setGenero(genero);
+        objSerieDTO.setAnoLancamento(anoLancamento);
+        objSerieDTO.setPlataforma(plataforma);
 
+
+        SerieDAO objSerieDAO = new SerieDAO();
+        objSerieDAO.cadastrarSerie(objSerieDTO);
         carregarSerie();
+        btnLimparAction(null);
+        showInformation("Salvo com sucesso");
+
 
     }
     @FXML
@@ -57,26 +70,32 @@ public class MainController {
         int anoLancamento = Integer.parseInt(txtAnoLancamento.getText());
         String plataforma = txtPlataforma.getText();
 
-        SerieDTO objseriedto = new SerieDTO();
-        objseriedto.setId(id);
-        objseriedto.setNome(nome);
-        objseriedto.setGenero(genero);
-        objseriedto.setAnoLancamento(anoLancamento);
-        objseriedto.setPlataforma(plataforma);
 
-        SerieDAO objseriedao = new SerieDAO();
-        objseriedao.atualizarSerie(objseriedto);
+        SerieDTO objSerieDTO = new SerieDTO();
+        objSerieDTO.setId(id);
+        objSerieDTO.setNome(nome);
+        objSerieDTO.setGenero(genero);
+        objSerieDTO.setAnoLancamento(anoLancamento);
+        objSerieDTO.setPlataforma(plataforma);
+
+
+        SerieDAO objSerieDAO = new SerieDAO();
+        objSerieDAO.atualizarSerie(objSerieDTO);
         carregarSerie();
     }
+
 
     @FXML
     private void btnDeletarAction(ActionEvent event){
         int id = Integer.parseInt(txtId.getText());
 
-        SerieDAO objseriedao = new SerieDAO();
-        objseriedao.deletarSerie(id);
+
+        SerieDAO objSerieDAO = new SerieDAO();
+        objSerieDAO.deletarSerie(id);
         carregarSerie();
     }
+
+
 
 
     @FXML
@@ -86,8 +105,11 @@ public class MainController {
         txtAnoLancamento.clear();
         txtGenero.clear();
         txtPlataforma.clear();
+
+
         txtNome.requestFocus();// Garante o foco para o usuário continuar digitando via TAB
     }
+
 
     @FXML
     private void initialize(){
@@ -96,9 +118,46 @@ public class MainController {
         colAnoLancamento.setCellValueFactory(new PropertyValueFactory<>("anoLancamento"));
         colGenero.setCellValueFactory(new PropertyValueFactory<>("genero"));
         colPlataforma.setCellValueFactory(new PropertyValueFactory<>("plataforma"));
+        txtAnoLancamento.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                txtAnoLancamento.setText(newValue.replaceAll("[^\\d]", ""));
+            }
+        });
+
 
         carregarSerie();
+        tblSerie.sceneProperty().addListener((observable, oldScene, newScene) -> {
+            if (newScene != null) {
+
+
+                newScene.setOnKeyPressed(event -> {
+
+
+                    if (event.getCode() == KeyCode.ENTER) {
+                        btnSalvar.fire();
+                    }
+
+
+                    if (event.getCode() == KeyCode.F2) {
+                        btnAtualizar.fire();
+                    }
+
+
+                    if (event.getCode() == KeyCode.DELETE) {
+                        btnDeletar.fire();
+                    }
+
+
+                    if (event.getCode() == KeyCode.ESCAPE) {
+                        btnLimparAction(null);
+                    }
+
+
+                });
+            }
+        });
     }
+
 
     @FXML
     private void carregarSerie(){
@@ -106,6 +165,7 @@ public class MainController {
         ArrayList<SerieDTO> listaSerie = objSerieDAO.listarSerie();
         tblSerie.setItems(FXCollections.observableArrayList(listaSerie));
     }
+
 
     @FXML
     private void carregarCampos(){
@@ -117,3 +177,4 @@ public class MainController {
         txtPlataforma.setText(serieDTO.getPlataforma());
     }
 }
+
