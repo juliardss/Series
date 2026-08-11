@@ -22,6 +22,11 @@ public class DialogUtil {
     }
 
     public static void showWarning(String mensagem) {
+        Alert alert = new Alert(AlertType.WARNING);
+        alert.setTitle("Aviso");
+        alert.setHeaderText(null);
+        alert.setContentText(mensagem);
+        alert.showAndWait();
 
     }
 }
