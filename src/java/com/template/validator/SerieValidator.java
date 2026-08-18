@@ -12,7 +12,6 @@ public class SerieValidator {
             Integer anoLancamento,
             String plataforma) {
 
-        // Verifica campos vazios
         if (nome == null || nome.isEmpty() ||
                 genero == null || genero.isEmpty() ||
                 anoLancamento == null ||
@@ -22,7 +21,6 @@ public class SerieValidator {
             return false;
         }
 
-        // Valida nome
         if (nome.length() < 3) {
             DialogUtil.showWarning(
                     "O nome da série deve ter pelo menos 3 caracteres!"
@@ -30,7 +28,6 @@ public class SerieValidator {
             return false;
         }
 
-        // Valida ano
         int anoAtual = Year.now().getValue();
 
         if (anoLancamento < 1900 || anoLancamento > anoAtual) {
@@ -40,7 +37,6 @@ public class SerieValidator {
             return false;
         }
 
-        // Valida gênero
         if (genero.length() < 3) {
             DialogUtil.showWarning(
                     "Informe um gênero válido!"
@@ -48,7 +44,6 @@ public class SerieValidator {
             return false;
         }
 
-        // Valida plataforma
         if (plataforma.length() < 3) {
             DialogUtil.showWarning(
                     "Informe uma plataforma válida!"
